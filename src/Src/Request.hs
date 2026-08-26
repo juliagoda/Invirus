@@ -2,27 +2,18 @@
 
 module Src.Request (getMalwareInfo) where
 
+import Src.Types (Attempts, Print(..), ResponseQuery(..))
+import Src.Style (changeStyle, resetStyle, startAnimation)
 import Control.Lens
 import Data.Aeson (object, (.=), Value)
 import Data.Aeson.Lens (key, nth)
 import Network.Wreq
-import System.Time.Extra (sleep)
 import Control.Monad (when)
 import Crypto.Hash (MD5(..), Digest)
 import Data.ByteString.Lazy.Internal
-
-type Attempts = Int
-
-class Print a where
-    printQuery :: a -> FilePath -> IO ()
-
-data ResponseQuery = Ok | IllegalHash | HashNotFound | Undefined deriving (Eq, Show)
-
-instance Print ResponseQuery where
-    printQuery Ok filepath = print $ "Malware has been found for " ++ filepath
-    printQuery IllegalHash filepath = print $ "Incorrect hash has been used to find samples for " ++ filepath
-    printQuery HashNotFound filepath = print $ "No malware samples found for the provided hash " ++ filepath
-    printQuery Undefined filepath = print $ "Not known error when sending request for " ++ filepath
+import qualified Data.ByteString.Lazy.Char8 as B8
+import Data.Aeson.Encode.Pretty (encodePretty)
+import Data.Maybe (fromJust)
 
 
 convertToResponseQuery :: Maybe Value -> ResponseQuery
@@ -35,7 +26,7 @@ convertToResponseQuery _ = Undefined
 sendRequest :: FilePath -> String -> Attempts -> IO (Either String (Response Data.ByteString.Lazy.Internal.ByteString))
 sendRequest filepath hash attempts
     | attempts > 0 = do
-        sleep 5
+        startAnimation
         let opts = defaults & header "referer" .~ ["https://virusvault.vercel.app/bulk-query"]
         let payload = object ["query" Data.Aeson..= ("get_info" :: String), "hash" Data.Aeson..= (hash :: String)]
         result <- postWith opts "https://virusvault.vercel.app/api/malware" payload
@@ -56,6 +47,9 @@ getMalwareInfo filepath hash = do
             let responseQueryStatus = result ^? responseBody . Data.Aeson.Lens.key "query_status"
             let responseData = result ^? responseBody . Data.Aeson.Lens.key "data" . nth 0
             let responseQuery = convertToResponseQuery responseQueryStatus
+            changeStyle responseQuery
             printQuery responseQuery filepath
-            when (responseQuery == Ok) $ print responseData
+            resetStyle
+            when (responseQuery == Ok) $ B8.putStrLn $ encodePretty $ Data.Maybe.fromJust responseData
     where hashString = show hash
+

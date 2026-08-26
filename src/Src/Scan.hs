@@ -12,7 +12,6 @@ import System.IO (withBinaryFile, IOMode(ReadMode), hIsEOF)
 
 generateHashMap :: FilePath -> IO (Digest MD5, FilePath)
 generateHashMap filePath = do
-    print filePath
     digest <- withBinaryFile filePath ReadMode $ \h -> do
         let loop ctx = do
                 isEof <- hIsEOF h

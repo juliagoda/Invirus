@@ -29,6 +29,8 @@ library
       Lib
       Src.Request
       Src.Scan
+      Src.Style
+      Src.Types
   other-modules:
       Paths_Invirus
   hs-source-dirs:
@@ -36,6 +38,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       aeson >=2.2.5.0
+    , aeson-pretty >=0.8.11
+    , ansi-terminal >=1.1.5
     , base >=4.20.2.0
     , bytestring >=0.12.2.0
     , crypton >=1.0.6
@@ -61,6 +65,8 @@ executable Invirus-exe
   build-depends:
       Invirus
     , aeson >=2.2.5.0
+    , aeson-pretty >=0.8.11
+    , ansi-terminal >=1.1.5
     , base >=4.20.2.0
     , bytestring >=0.12.2.0
     , crypton >=1.0.6
@@ -87,6 +93,8 @@ test-suite Invirus-test
   build-depends:
       Invirus
     , aeson >=2.2.5.0
+    , aeson-pretty >=0.8.11
+    , ansi-terminal >=1.1.5
     , base >=4.20.2.0
     , bytestring >=0.12.2.0
     , crypton >=1.0.6

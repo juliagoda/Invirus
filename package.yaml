@@ -28,7 +28,9 @@ dependencies:
 - lens >= 5.3.6
 - aeson >= 2.2.5.0
 - lens-aeson >= 1.2.3
+- aeson-pretty >= 0.8.11
 - extra >= 1.8.1
+- ansi-terminal >= 1.1.5
 
 ghc-options:
 - -Wall
