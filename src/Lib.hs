@@ -2,10 +2,12 @@ module Lib
     ( scanFiles
     , module Src.Scan
     , module Src.Request
+    , module Src.Actions
     ) where
 
 import Src.Scan (collectFiles)
 import Src.Request (getMalwareInfo)
+import Src.Actions (chooseAction)
 import System.FilePath (isAbsolute)
 import Control.Exception (throwIO, Exception)
 import Data.Typeable
@@ -27,4 +29,5 @@ scanFiles = do
     when (not $ existsSystemPath && isAbsolute systemPath) $ throwIO (PathError "The given directory path doesn't exist")
     collectedFiles <- Streamly.Data.Stream.fold Streamly.Data.Fold.toList $ collectFiles systemPath
     forM_ collectedFiles $ \(digest, path) -> do
-        getMalwareInfo path digest
+        retrievedMalwareInfo <- getMalwareInfo path digest
+        when retrievedMalwareInfo $ chooseAction path

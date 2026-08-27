@@ -1,4 +1,4 @@
-module Src.Style (changeStyle, resetStyle, startAnimation) where
+module Src.Style (changeStyle, resetStyle, startAnimation, printActions) where
 
 import Src.Types (ResponseQuery(..))
 import System.Console.ANSI
@@ -12,22 +12,27 @@ malwareFoundStyle = do
     setSGR [ SetConsoleIntensity BoldIntensity
              , SetColor Foreground Vivid Red ]
 
+
 resetStyle :: IO ()
 resetStyle = do
     setSGR [ Reset ]
+
 
 changeStyle :: ResponseQuery -> IO ()
 changeStyle Ok = malwareFoundStyle
 changeStyle _ = return ()
 
+
 startAnimation :: IO ()
 startAnimation = resetStyle >> printAnimation
+
 
 pause :: IO ()
 pause = do
     hFlush stdout
     -- 1 second pause
     threadDelay 1000000
+
 
 printAnimation :: IO ()
 printAnimation = do
@@ -43,3 +48,11 @@ printAnimation = do
     putStrLn "Scanning..."
     pause
     setCursorPosition ((fst extractedCursorPos) - 1) (snd extractedCursorPos)
+
+
+printActions :: IO ()
+printActions = do
+    putStrLn ""
+    setSGR [SetConsoleIntensity BoldIntensity]
+    putStrLn "(R)emove file, (P)rint file, (C)ontinue"
+    resetStyle
