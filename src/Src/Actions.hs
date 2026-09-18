@@ -40,5 +40,3 @@ chooseAction filepath = do
             Just Continue -> runAction Continue filepath
             Just action -> runAction action filepath >> chooseAction filepath
             Nothing -> print "Incorrect key pressed. Try again" >> chooseAction filepath
-    
- 

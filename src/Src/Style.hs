@@ -1,6 +1,6 @@
-module Src.Style (changeStyle, resetStyle, startAnimation, printActions) where
+module Src.Style (changeStyle, changeStyleDB, resetStyle, startAnimation, printActions) where
 
-import Src.Types (ResponseQuery(..))
+import Src.Types (ResponseQuery(..), DatabaseQuery(..), DatabaseAction(..))
 import System.Console.ANSI
 import System.IO
 import Control.Concurrent
@@ -13,6 +13,12 @@ malwareFoundStyle = do
              , SetColor Foreground Vivid Red ]
 
 
+malwareAddedToDBStyle :: IO ()
+malwareAddedToDBStyle = do
+    setSGR [ SetConsoleIntensity BoldIntensity
+             , SetColor Foreground Vivid Green ]
+
+
 resetStyle :: IO ()
 resetStyle = do
     setSGR [ Reset ]
@@ -21,6 +27,13 @@ resetStyle = do
 changeStyle :: ResponseQuery -> IO ()
 changeStyle Ok = malwareFoundStyle
 changeStyle _ = return ()
+
+
+changeStyleDB :: DatabaseQuery -> DatabaseAction -> IO ()
+changeStyleDB Success Find = malwareFoundStyle
+changeStyleDB Success Add = malwareAddedToDBStyle
+changeStyleDB Fail Add = malwareFoundStyle
+changeStyleDB _ _ = return ()
 
 
 startAnimation :: IO ()

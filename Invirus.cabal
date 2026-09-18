@@ -28,7 +28,9 @@ library
   exposed-modules:
       Lib
       Src.Actions
+      Src.Database
       Src.Request
+      Src.Run
       Src.Scan
       Src.Style
       Src.Types
@@ -38,7 +40,9 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      aeson >=2.2.5.0
+      HDBC >=2.4.0.5
+    , HDBC-sqlite3 >=2.3.3.1
+    , aeson >=2.2.5.0
     , aeson-pretty >=0.8.11
     , ansi-terminal >=1.1.5
     , base >=4.20.2.0
@@ -66,7 +70,9 @@ executable Invirus-exe
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      Invirus
+      HDBC >=2.4.0.5
+    , HDBC-sqlite3 >=2.3.3.1
+    , Invirus
     , aeson >=2.2.5.0
     , aeson-pretty >=0.8.11
     , ansi-terminal >=1.1.5
@@ -96,7 +102,9 @@ test-suite Invirus-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      Invirus
+      HDBC >=2.4.0.5
+    , HDBC-sqlite3 >=2.3.3.1
+    , Invirus
     , aeson >=2.2.5.0
     , aeson-pretty >=0.8.11
     , ansi-terminal >=1.1.5
