@@ -55,7 +55,6 @@ getMalwareInfo filepath hash = do
             let responseData = result ^? responseBody . Data.Aeson.Lens.key "data" . nth 0
             let responseQuery = convertToResponseQuery responseQueryStatus
             changeStyle responseQuery
-            putStrLn $ "Sending request with hash: " ++ hash
             printQuery responseQuery filepath
             resetStyle
             let retrievedMalwareInfo = responseQuery == Ok

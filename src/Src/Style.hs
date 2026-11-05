@@ -43,8 +43,8 @@ startAnimation = resetStyle >> printAnimation
 pause :: IO ()
 pause = do
     hFlush stdout
-    -- 1 second pause
-    threadDelay 1000000
+    -- 0.5 second pause
+    threadDelay 5000
 
 
 printAnimation :: IO ()
