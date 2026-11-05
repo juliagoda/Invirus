@@ -42,6 +42,10 @@ packages:
 #
 extra-deps:
 - HDBC-sqlite3-2.3.3.1@sha256:5025fd94d02b9b3f0b8b8233796dd9a85a0b3dda6503c6e671e3eddbc51cb4d4,2424
+- text-2.1.4@sha256:32823fd40b02db9b4ef4c527c9c3e6c1dcd365b8a79521f9d78d2c0a0a8d64f1,11602
+- Cabal-3.16.1.0@sha256:39873317ab895194547c3fd72c91cdb97c800a49b2656920854747ee466627ca,14459
+- parsec-3.1.18.0@sha256:28a0cb964cf4c14ac271982fa815bee21cb4ff39e8f2b97efe035e63ad6857aa,4572
+- Cabal-syntax-3.16.1.0@sha256:17cf54d07d7aa65ea24ba4045912b8a8af065f10e429fd1811d43810b313c504,7778
 
 # Override default flag values for project packages and extra-deps
 # flags: {}

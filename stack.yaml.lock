@@ -3,7 +3,42 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: HDBC-sqlite3-2.3.3.1@sha256:5025fd94d02b9b3f0b8b8233796dd9a85a0b3dda6503c6e671e3eddbc51cb4d4,2424
+    pantry-tree:
+      sha256: 76e71f73502350ed3fe5fc64604a21a3c8027d49fe6846183d53dbdaf583437a
+      size: 1427
+  original:
+    hackage: HDBC-sqlite3-2.3.3.1@sha256:5025fd94d02b9b3f0b8b8233796dd9a85a0b3dda6503c6e671e3eddbc51cb4d4,2424
+- completed:
+    hackage: text-2.1.4@sha256:32823fd40b02db9b4ef4c527c9c3e6c1dcd365b8a79521f9d78d2c0a0a8d64f1,11602
+    pantry-tree:
+      sha256: 8317bb5c1fd13c26d024aa72ccd253363965aef9be2766a9cc7bb9ce25e4e40c
+      size: 8847
+  original:
+    hackage: text-2.1.4@sha256:32823fd40b02db9b4ef4c527c9c3e6c1dcd365b8a79521f9d78d2c0a0a8d64f1,11602
+- completed:
+    hackage: Cabal-3.16.1.0@sha256:39873317ab895194547c3fd72c91cdb97c800a49b2656920854747ee466627ca,14459
+    pantry-tree:
+      sha256: b6ac49163659ec305805fc0d2c0564c35fac7132f4c5be6689d0c80a6405ecf0
+      size: 12139
+  original:
+    hackage: Cabal-3.16.1.0@sha256:39873317ab895194547c3fd72c91cdb97c800a49b2656920854747ee466627ca,14459
+- completed:
+    hackage: parsec-3.1.18.0@sha256:28a0cb964cf4c14ac271982fa815bee21cb4ff39e8f2b97efe035e63ad6857aa,4572
+    pantry-tree:
+      sha256: 6e5346454e8b4aceb48072e36716b6665d68f7217d2f9f4540c191c6253719d1
+      size: 2810
+  original:
+    hackage: parsec-3.1.18.0@sha256:28a0cb964cf4c14ac271982fa815bee21cb4ff39e8f2b97efe035e63ad6857aa,4572
+- completed:
+    hackage: Cabal-syntax-3.16.1.0@sha256:17cf54d07d7aa65ea24ba4045912b8a8af065f10e429fd1811d43810b313c504,7778
+    pantry-tree:
+      sha256: 1db24d3ca877095a7c4f99fda3c58155a33d8041dfe9faa886420c43572330a3
+      size: 11238
+  original:
+    hackage: Cabal-syntax-3.16.1.0@sha256:17cf54d07d7aa65ea24ba4045912b8a8af065f10e429fd1811d43810b313c504,7778
 snapshots:
 - completed:
     sha256: 1c2140555bdf61c30a893b3ec1033987d01eda75ce82a1dda033e8fb6f8b322c

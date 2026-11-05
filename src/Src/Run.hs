@@ -1,29 +1,27 @@
 module Src.Run (runAPIRequestWithDB, runDBOption) where
 
 import Src.Request (getMalwareInfo)
-import Src.Database (addOrAlterDBRow, convertToResponseDB, DatabaseRow(..))
+import Src.Database (addOrAlterDBRow, convertToResponseDB)
 import Src.Actions (chooseAction)
-import Src.Types (Print(..), DatabaseQuery(..), DatabaseAction(..))
+import Src.Types (DigestValue, DigestType, Print(..), DatabaseAction(..))
 import Src.Style (changeStyleDB, resetStyle)
 import Database.HDBC (SqlValue)
 import Database.HDBC.Sqlite3 (Connection)
-import Crypto.Hash (MD5(..), Digest)
 import Control.Monad (when)
 
 
-runAPIRequestWithDB :: Connection -> Maybe [SqlValue] -> FilePath -> Digest MD5 -> IO ()
-runAPIRequestWithDB dbConnection retrievedMalwareInfo filepath digest = do
-    let dbRow = DatabaseRow digest
+runAPIRequestWithDB :: Connection -> Maybe [SqlValue] -> FilePath -> DigestValue -> DigestType -> IO ()
+runAPIRequestWithDB dbConnection retrievedMalwareInfo filepath digest hash = do
     let convertedDBResponse = convertToResponseDB retrievedMalwareInfo
     success <- runAPIRequestOption filepath digest
     resetStyle
     changeStyleDB convertedDBResponse Add
-    when success $ addOrAlterDBRow retrievedMalwareInfo dbConnection dbRow
+    when success $ addOrAlterDBRow hash retrievedMalwareInfo dbConnection filepath digest
     resetStyle
     when success $ chooseAction filepath
 
 
-runAPIRequestOption :: FilePath -> Digest MD5 -> IO Bool
+runAPIRequestOption :: FilePath -> DigestValue -> IO Bool
 runAPIRequestOption filepath digest = do
     retrievedMalwareInfo <- getMalwareInfo filepath digest
     return retrievedMalwareInfo

@@ -45,9 +45,9 @@ printMalwareInfo responseData = do
     B8.putStrLn $ encodePretty $ Data.Maybe.fromJust responseData
 
 
-getMalwareInfo :: FilePath -> Digest MD5 -> IO Bool
+getMalwareInfo :: FilePath -> String -> IO Bool
 getMalwareInfo filepath hash = do
-    requestResult <- sendRequest filepath hashString 2
+    requestResult <- sendRequest filepath hash 2
     case requestResult of
         Left message -> print message >> return False
         Right result -> do
@@ -55,10 +55,10 @@ getMalwareInfo filepath hash = do
             let responseData = result ^? responseBody . Data.Aeson.Lens.key "data" . nth 0
             let responseQuery = convertToResponseQuery responseQueryStatus
             changeStyle responseQuery
+            putStrLn $ "Sending request with hash: " ++ hash
             printQuery responseQuery filepath
             resetStyle
             let retrievedMalwareInfo = responseQuery == Ok
             when retrievedMalwareInfo $ printMalwareInfo responseData
             return retrievedMalwareInfo
-    where hashString = show hash
 

@@ -1,6 +1,7 @@
-module Src.Types (Attempts, Print(..), ResponseQuery(..), DatabaseQuery(..), DatabaseAction(..)) where
+module Src.Types (Attempts, DigestValue, DigestType, Print(..), ResponseQuery(..), DatabaseQuery(..), DatabaseAction(..)) where
 
-
+type DigestValue = String
+type DigestType = String
 type Attempts = Int
 
 class Print a where

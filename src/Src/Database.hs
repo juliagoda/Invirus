@@ -1,11 +1,9 @@
-module Src.Database (convertToResponseDB, createDB, malwareInDB, addOrAlterDBRow, disconnectDB, DatabaseRow(..)) where
+module Src.Database (convertToResponseDB, createDB, malwareInDB, addOrAlterDBRow, disconnectDB) where
 
 import Database.HDBC
 import Database.HDBC.Sqlite3 (connectSqlite3, Connection)
-import Src.Types (Print(..), DatabaseQuery(..))
-import Crypto.Hash (MD5(..), Digest)
-
-data DatabaseRow = DatabaseRow { md5 :: Digest MD5 } deriving (Show)
+import Src.Scan (generateHashesForFile)
+import Src.Types (DatabaseQuery(..), DigestValue)
 
 
 convertToResponseDB :: Maybe [SqlValue] -> DatabaseQuery
@@ -16,26 +14,39 @@ convertToResponseDB Nothing = Fail
 createDB :: IO Connection
 createDB = do
     connection <- connectSqlite3 "malware.db"
-    handleSqlError $ run connection "CREATE TABLE IF NOT EXISTS malware (md5 TEXT NOT NULL, date DATETIME NOT NULL)" []
+    _ <- handleSqlError $ run connection "CREATE TABLE IF NOT EXISTS malware (md5 TEXT NOT NULL, sha1 TEXT NOT NULL, sha256 TEXT NOT NULL, date DATETIME NOT NULL)" []
     return connection
 
 
-prepareCorrectQuery :: DatabaseRow -> Maybe [SqlValue] -> String
-prepareCorrectQuery databaseRow Nothing  = "INSERT INTO malware VALUES ('" ++ (show $ md5 databaseRow) ++ "', datetime('now', 'localtime'));"
-prepareCorrectQuery databaseRow _  = "UPDATE malware SET date = datetime('now', 'localtime') WHERE md5 = '" ++ (show $ md5 databaseRow) ++ "';"
+prepareHashQuery :: String -> Maybe [SqlValue] -> FilePath -> DigestValue -> IO String 
+prepareHashQuery hash sqlValue filepath digest = do
+    case sqlValue of
+        Nothing -> do
+            hashes <- generateHashesForFile filepath
+            let (md5, sha1, sha256) = hashes
+            return $ md5 ++ "', '" ++ sha1 ++ "', '" ++ sha256
+        _ -> return $ hash ++ " = '" ++ digest
 
 
-malwareInDB :: Connection -> Digest MD5 -> IO (Maybe [SqlValue])
-malwareInDB connection digest = do
-    select <- prepare connection $ "SELECT * FROM malware WHERE md5 = '" ++ (show digest) ++ "';"
+prepareCorrectQuery :: String -> Maybe [SqlValue] -> String
+prepareCorrectQuery hashQuery Nothing  = "INSERT INTO malware VALUES ('" ++ hashQuery ++ "', datetime('now', 'localtime'));"
+prepareCorrectQuery hashQuery _  = "UPDATE malware SET date = datetime('now', 'localtime') WHERE " ++ hashQuery ++ "';"
+
+
+malwareInDB :: String -> Connection -> DigestValue -> IO (Maybe [SqlValue])
+malwareInDB hash connection digest = do
+    putStrLn $ hash ++ " = '" ++ digest ++ "'"
+    select <- prepare connection $ "SELECT * FROM malware WHERE " ++ hash ++ " = '" ++ digest ++ "';"
     execute select []
     fetchRow select
 
 
-addOrAlterDBRow :: Maybe [SqlValue] -> Connection -> DatabaseRow -> IO ()
-addOrAlterDBRow malware connection databaseRow = do
-    handleSqlError $ run connection (prepareCorrectQuery databaseRow malware) []
-    putStrLn $ "Malware with digest " ++ (show $ md5 databaseRow) ++ " has been added to database"
+addOrAlterDBRow :: String -> Maybe [SqlValue] -> Connection -> FilePath -> DigestValue -> IO ()
+addOrAlterDBRow hash malware connection filepath digest = do
+    preparedHashQueryPart <- prepareHashQuery hash malware filepath digest
+    handleSqlError $ run connection (prepareCorrectQuery preparedHashQueryPart malware) []
+    let action = if malware == Nothing then "added to" else "updated in"
+    putStrLn $ "Malware with digest/s " ++ preparedHashQueryPart ++ " has been " ++ action ++ " database"
     commit connection
 
 

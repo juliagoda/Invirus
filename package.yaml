@@ -10,6 +10,9 @@ extra-source-files:
 - README.md
 - CHANGELOG.md
 
+data-files:
+- config/config.ini
+
 category:            Security
 
 description:         Please see the README on GitHub at <https://github.com/juliagoda/Invirus>
@@ -35,6 +38,9 @@ dependencies:
 - haskeline >= 0.8.2.1
 - HDBC >= 2.4.0.5
 - HDBC-sqlite3 >= 2.3.3.1
+- config-ini >= 0.2.7.0
+- text >= 2.1.4
+- byteable >= 0.1.1
 
 ghc-options:
 - -Wall
